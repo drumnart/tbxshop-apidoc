@@ -1071,7 +1071,7 @@ destination - объект, описывающий куда перейти пр�
     + Body
         
             {   
-                "id": "<itemId>",
+                "id": "<productId>",
                 "count": 1
             }
     
@@ -1130,7 +1130,30 @@ destination - объект, описывающий куда перейти пр�
     
 + Response 204
 
+## Activate promo code [/cart/activatePromo]
 
+### Activate [POST]
+
+Активировать промо код в корзине
+
++ Request (application/json)
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: en-US
+             
+    + Body
+        
+            {   
+                "promo": "qwerty"
+            }
+    
++ Response 200 (application/json)  
+
+        {
+            // Cart object
+        }
         
 # Group Orders
 
