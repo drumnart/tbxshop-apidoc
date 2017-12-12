@@ -1,0 +1,1232 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/eshop/
+
+# EShop API
+
+Bitrix API allows consumers to interact with ToBox eShop 
+(e.g. view and buy products, track orders, etc.).
+
+Тексты возвращаются локализованные с учетом параметра Accept-Language.
+
+# Group Authorization
+
+## Authentication [/auth/token]
+
+### Get Token [POST]
+
+Возвращает user'а, если в header'е правильный токен. 
+При отсутствии токена в header'е - создает нового.
+При не правильном токене - возвращает 403.
+
+Токен сохраняется на клиенте и далее передается в каждом запросе.
+
++ Request
+   
+    + Headers
+       
+            x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+            Accept-Language: ru-RU
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "key": "AtErTsGVDZXJ68hQXVZ9"
+            }
+        
++ Response 403 (application/json)
+
+    + Body
+        
+            {
+                "code": <code>
+                "message": "User isn’t found"
+            }
+
+
+# Group Feeds
+
+## Main Feed [/feeds/main]
+
+### Retrieve Main Feed [GET]
+
+Возвращает главную ленту. Лента разделена на секции. Каждая секция состоит из header'а, footer'а и коллекции ячеек (entities).
+Секция - это json объект, где ключ (например, "banners") определяет формат отображения ячеек на клиенте.
+Для секций "New Products" (newProducts) и "Best Sellers" (bestSellers) возвращать не более 5 entities.
+Для секции "Departments" (departments) возвращать 4 entities.
+Для секции "Product Reviews" (articles) - не более 3 entities. 
+Для секции "Campaigns" (campaigns) - не более 3
+Для секции "Bundles" (bundles) - TODO: <Пока не известно> 
+Для остальных секций - все entities.
+
+Переходы из хедеров в приложении пока не используются, пока досточно значения в title возвращать.
+
+В качестве основного entity в списках newProducts, bestSellers используется объект типа Product (по составу полей такой же как мы получаем через `/products/id` )
+Такой же объект используется и в корзине.
+
+В секции banners в качестве entity используется объект, где
+id - id баннера
+pics - массив [< url изображения>] (скорей всего для баннеров там всегда будет 1 url)
+destination - объект, описывающий куда перейти при клике. Состоит из:
+    url - путь куда перейти (для deep linking'а)
+    type - enum значение типа destination'а. Например, product - для перехода в карточку товара, либо department - для перехода в подкаталог.
+    id - id продукта или подкаталога, или другой какой-то сущности.
+    
+    
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+
+        {
+            "sections": [
+                {
+                    "banners": {
+                        "header": {
+                            "title": "",
+                            "accessory": {
+                                "enabled": false,
+                                "text": ""
+                            },
+                            "destination": {
+                                "url": "",
+                                "type": "",
+                                "id": ""
+                            }
+                        },
+                        "footer": {
+                            "title": "",
+                            "accessory": {
+                                "enabled": false,
+                                "text": ""
+                            },
+                            "destination": {
+                                "url": "",
+                                "type": "",
+                                "id": ""
+                            }
+                        },
+                        "entities": [
+                            {
+                                "id": "d310988a-0021-4c6e-85b7-000000000000",
+                                "pics": [
+                                    "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                                ],
+                                "destination": {
+                                    "url": "https://bitrix.tobox.com/catalog/",
+                                    "type": "product or deparment or other smth. else"
+                                    "id": "? - categoryId or productId or smth. else"
+                                }
+                            }
+                        ]
+                    }
+                }, 
+                {
+                    "newProducts": {
+                        "header": {
+                            "title": "New products",
+                            "accessory": {
+                                "enabled": false,
+                                "text": ""
+                            },
+                            "destination": {
+                                "url": "?",
+                                "type": "?",
+                                "id": "?"
+                            }
+                        },
+                        "footer": {},
+                        "entities": [
+                            {
+                                "id": "<productId>",
+                                "title": "Шланг ПВХ для капельного полива растений",
+                                "description": "<html>",
+                                "shipping": "<html>",
+                                "brand": {
+                                    "id": "",
+                                    "title": "",
+                                    "pic" : {}
+                                },
+                                "category": {
+                                    "id": 42,
+                                    "name": "Дача"
+                                },
+                                "options": {
+                                    "isHit": false,
+                                    "isNew": true,
+                                    "isSuggested": false
+                                },
+                                "status": {
+                                    "key": "available",
+                                    "title": "Available"
+                                },
+                                "availableForSale_count": 16,
+                                "isWished": false,
+                                "isInCart": false,
+                                "pics": [
+                                    {
+                                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                                    }
+                                ],
+                                "destination": {
+                                    "url": "https://tobox.com/eshop/products/<productId>",
+                                    "type": "product",
+                                    "id": "<productId>"
+                                },
+                                "price": {
+                                    "currency": "USD",
+                                    "value": "19.0",
+                                    "symbol": "$"
+                                },
+                                "discounted": {
+                                    "currency": "USD",
+                                    "value": "18.0",
+                                    "symbol": "$"
+                                },
+                                "discPercent": -5,
+                                "created_at": "2017-06-01T18:06:28.620Z",
+                                "updated_at": "2017-06-28T17:39:57.620Z",
+                                "attributes": [
+                                    {
+                                        "key": "<key>",
+                                        "name": "<name>",
+                                        "value": "<value>"
+                                    }
+                                ],
+                                "delivery": {},
+                                "payment": {}
+                            }
+                        ]
+                    }
+                }, 
+                {
+                    "articles": {    // aka Product Reviews
+                        "header": {
+                            "title": "Product Reviews",
+                            "accessory": {},
+                            "destination": {}
+                        },
+                        "footer": {},
+                        "entities": [
+                            {
+                                "id": "<articleId>",
+                                "title": "Как выбрать блендер?",
+                                "short_description": "Для хозяек на кухне, очень важна каждая деталь, а такой прибор как блендер всегда верный помощник при готовке.",
+                                "article_parts": [
+                                    {
+                                        "subtitle": "1. Тип",
+                                        "description": "Блендер разделяют на два типа: ручной и стационарный <и т.д.>",
+                                        "pic": {
+                                            "preview": "<url of image>"
+                                        }
+                                    }
+                                ],
+                                "pics": [
+                                    {
+                                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                                    }
+                                ],
+                                "destination": {
+                                    "url": "<url>",
+                                    "type": "preview",
+                                    "id": "<id>"
+                                },
+                                "avatar": {
+                                    "pic": {
+                                        "thumbnail": "https://urbanculture.in/images/9/9b/Slowpoke.png"
+                                    },
+                                    "destination": {}
+                                },
+                                "created_at": "2017-06-01T18:06:28.620Z",
+                            }
+                        ]
+                    }
+                },
+                {
+                    "bestSellers": {
+                        "header": {
+                            "title": "Best Sellers",
+                            "accessory": {
+                                "enabled": false,
+                                "text": ""
+                            },
+                            "destination": {
+                                "url": "?",
+                                "type": "?",
+                                "id": "?"
+                            }
+                        },
+                        "footer": {},
+                        "entities": [
+                            {
+                                "id": "<productId>",
+                                "title": "Плитка электрическая одноконфорочная",
+                                "description": "<В html формате>",
+                                "shipping": "<html>",
+                                "brand": {
+                                    "id": "",
+                                    "title": "",
+                                    "pic" : {}
+                                },
+                                "category": {
+                                    "id": 315,
+                                    "name": "Дача"
+                                },
+                                "options": {
+                                    "isHit": true,
+                                    "isNew": false,
+                                    "isSuggested": false
+                                },
+                                "status": {
+                                    "key": "available",
+                                    "title": "Available"
+                                },
+                                "availableForSale_count": 1,
+                                "isWished": false,
+                                "isInCart": false,
+                                "pics": [
+                                    {
+                                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                                    }
+                                ],
+                                "destination": {
+                                    "url": "?",
+                                    "type": "product",
+                                    "id": "?"
+                                },
+                                "price": {
+                                    "currency": "RUB",
+                                    "value": "499.0",
+                                    "symbol": "₽"
+                                },
+                                "discounted": {
+                                    "currency": "USD",
+                                    "value": "18.0",
+                                    "symbol": "$"
+                                },
+                                "discPercent": -5,
+                                "created_at": "2017-06-01T18:06:28.620Z",
+                                "updated_at": "2017-06-28T17:39:57.620Z",
+                                "attributes": [
+                                    {
+                                        "key": "<key>",
+                                        "name": "<name>",
+                                        "value": "<value>"
+                                    }
+                                ],
+                                "delivery": {},
+                                "payment": {}
+                            }
+                        ]
+                    }
+                },
+                {
+                    "departments": {
+                        "header": {
+                           "title": "Departments",
+                           "accessory": {
+                               "enabled": false,
+                               "text": "All"
+                            },
+                            "destination": {
+                                "url": "https://bitrix.tobox.com/catalog/",
+                                "type": "?",
+                                "id": "?"
+                            }
+                        },
+                        "footer": {},
+                        "entities": [
+                            {
+                                "id": "1240",
+                                "pics": [
+                                    "https://bitrix.tobox.com/upload/iblock/e1f/e1f37485c03ea8b81dcc51c2304b5c4e.jpg"
+                                ],
+                                "title": "Digital Scales",
+                                "sort": 0,
+                                "destination": {
+                                    "url": "<url>",
+                                    "type": "department",
+                                    "id": "<id>"
+                                }
+                             }
+                        ]
+                    }
+                },
+                {
+                    "campaigns": {
+                        "header": {
+                            "title": "Campaigns"
+                        },
+                        "footer": {},
+                        "entities": [
+                            {
+                                "id": "<id>",
+                                "pics": [
+                                    "<url>"
+                                ],
+                                "title": "title",
+                                "sort": 0,
+                                "destination": {
+                                    "url": "<url>",
+                                    "type": "compaign",
+                                    "id": "<id>"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "bundles": {
+                        "header": {
+                            "title": "Bundles"
+                        },
+                        "footer": {},
+                        "entities": [
+                            {
+                                "id": "<id>",
+                                "pics": [],
+                                "title": "title",
+                                "sort": 0,
+                                "destination": {
+                                    "url": "<url>",
+                                    "type": "compaign",
+                                    "id": "<id>"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+        
+        
+## Category Feed [/feeds/categories/{id}{?limit,page,searchQuery,priceFrom,priceTo}]
+
++ Parameters
+    + id (required, number, `1`) - ID of nodal category
+    + limit (optional, number, `20`) - Max quantity of records per page
+    + page (optional, number, `0`) - Number of page
+    + searchQuery (optional, string, `платье`) - Text string to search
+    + priceFrom (optional, number, `100`) - Minimum price for filtering (in currency of user)
+    + priceTo (optional, number, `999999`) - Maximum price for filtering (in currency of user)
+
+### Retrieve Category Feed [GET]
+
+Возвращает ленту всех товаров, входящих в указанную категорию (параметр id), включая вложенные подкатегории. 
+Поддерживается paging.
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+
+        {
+            "sections": [
+                {
+                    "banners": {
+                        "header": {},
+                        "footer": {},
+                        "entities": [
+                            {
+                                "id": "<bannerId>",
+                                "pic": {
+                                    "large": ""
+                                },
+                                "destination": {
+                                    "url": "",
+                                    "type": "category or product or selection or smth. else"
+                                    "id": "? - categoryId or productId or smth. else"
+                                }
+                            }
+                        ]
+                    } 
+                },
+                {
+                    "products": {
+                        "entities": [
+                            {
+                                "id": "<productId>",
+                                "title": "<title>",
+                                "description": "<html>",
+                                "shipping": "<html>",
+                                "brand": {
+                                    "id": "",
+                                    "title": "",
+                                    "pic" : {}
+                                },
+                                "category": {
+                                    "id": 310,
+                                    "name": "Дача"
+                                },
+                                "options": {
+                                    "isHit": true,
+                                    "isNew": false,
+                                    "isSuggested": false
+                                },
+                                "status": {
+                                    "key": "?",
+                                    "title": "В наличии"
+                                },
+                                "availableForSale_count": 1,
+                                "isWished": false,
+                                "isInCart": false,
+                                "pics": [
+                                    {
+                                        "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                                    }
+                                ],
+                                "destination": {
+                                    "url": "?",
+                                    "type": "product",
+                                    "id": "?"
+                                },
+                                "price": {
+                                    "currency": "RUB",
+                                    "value": "499.0",
+                                    "symbol": "₽"
+                                },
+                                "discounted": {
+                                    "currency": "USD",
+                                    "value": "18.0",
+                                    "symbol": "$"
+                                },
+                                "discPercent": -5,
+                                "created_at": "2017-06-01T18:06:28.620Z",
+                                "updated_at": "2017-06-28T17:39:57.620Z",
+                                "attributes": [
+                                    {
+                                        "key": "<key>",
+                                        "name": "<name>",
+                                        "value": "<value>"
+                                    }
+                                ],
+                                "delivery": {},
+                                "payment": {}
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+
+
+# Group Categories
+
+## Category Collection [/categories/{id}{?depth}]
+
++ Parameters
+
+    + id (optional, number, `1`) - ID of category
+    + depth (optional, number, `2`) - Depth of hierarchy to fetch
+    
+### List Categories [GET]
+
+Получение списка категорий товаров. Если не задан id, то возвращается полная иерархия.
+Возможно задавать глубину вложенности через параметр depth.
+Причем, если depth не задан или равен 0, то возвращается полная вложенность для указанной категории.
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+        
+        [
+            {
+                "id": 34,
+                "name": "Для дачи",
+                "parent_id": null,
+                "depth": 1,
+                "children_count": 1,
+                "children": [
+                    {
+                        "id": 35,
+                        "name": "Пикник и отдых на природе",
+                        "parent_id": 34,
+                        "depth": 2,
+                        "children_count": 0,
+                        "children": [],
+                        "url": "",
+                        "products_count": 4,
+                        "pic": {
+                            "thumbnail": "https://dev.tobox.ru/upload/iblock/3a4/3a481b87709d8f1b3bded1e5518bab2b.jpg"
+                        }
+                    }
+                ]
+                "url": "",
+                "products_count": 14,
+                "pic": {
+                    "thumbnail": "https://dev.tobox.ru/upload/iblock/703/703611c51aa4208b285f71481b367a9f.jpg"
+                }
+            }
+        ]
+        
+
+# Group Products
+
+## Product [/products/{id}]
+
++ Parameters
+
+    + id (required, number, `1`) - ID
+    
+### Retrieve Product [GET]
+
+Получение товара по его ID. 
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "<productId>",
+                "title": "<title>",
+                "description": "<html>",
+                "shipping": "<html>",
+                "brand": {
+                    "id": "",
+                    "title": "",
+                    "pic" : {}
+                },
+                "category": {
+                    "id": 315,
+                    "name": "Дача"
+                },
+                "options": {
+                    "isHit": false,
+                    "isNew": false,
+                    "isSuggested": true
+                },
+                "status": {
+                    "key": "?",
+                    "title": "В наличии"
+                },
+                "availableForSale_count": 1,
+                "isReserved": false,
+                "isInCart": false,
+                "pics": [
+                    {
+                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                    }
+                ],
+                "price": {
+                    "currency": "RUB",
+                    "value": "499.0",
+                    "symbol": "₽"
+                },
+                "discounted": {
+                    "currency": "USD",
+                    "value": "18.0",
+                    "symbol": "$"
+                },
+                "discPercent": -5,
+                "created_at": "2017-06-01T18:06:28.620Z",
+                "updated_at": "2017-06-28T17:39:57.620Z",
+                "attributes": [
+                    {
+                        "key": "<key>",
+                        "name": "<name>",
+                        "value": "<value>"
+                    }
+                ],
+                "delivery": {},
+                "payment": {},
+                "reviews": { // Отзывы пока не используем
+                    "total": 3,
+                    "rating": 4.5,
+                    "recent": [
+                        {
+                            "id": "<reviewID>",
+                            "rating": 5,
+                            "name": "Roger Moore",
+                            "country": "",
+                            "created_at": "2017-06-01T18:06:28.620Z",
+                            "updated_at": "2017-06-28T17:39:57.620Z",
+                            "creatorId": "",
+                            "title": "Заголовок отзыва",
+                            "body": "Текст отзыва",
+                            "isMyReview": false,
+                            "thumb_up": 0,
+                            "thumb_down": 0,
+                            "myVote": true,
+                            "avatar": {
+                                "pic": {
+                                    "thumbnail": "https://urbanculture.in/images/9/9b/Slowpoke.png"
+                                }
+                            },
+                            "pics": [
+                                {
+                                    "large": "?"
+                                }
+                            ]
+                        }
+                    ],
+                    "myReviews": []
+                }
+            }
+        ]
+        
+# Group Search 
+
+## Search Products [/search/products]
+
+### List products [POST]
+
+Получение коллекции товаров, удовлетворяющих параметрам поиска. Если параметры не заданы, то просто получаем список товаров.
+
++ Request (application/json)
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
+    + Body
+        
+            {   
+                "limit": 20,                // Max quantity of records per page
+                "page": 0,                  // Number of page
+                "searchQuery": "платье",    // Text string to search
+                "categoryId": 1,            // ID of category
+                "priceFrom": 100,           // Minimum price for filtering (in currency of user)
+                "priceTo" 999999,           // Maximum price for filtering (in currency of user)
+                "attributes": {},           // key-value pairs of attributes 
+                "isHit": 0,                 // receive bestsellers
+                "isNew": 0,                 // receive new (fresh) products
+                "isSuggested": 0,           // receive suggested products
+                "status": "<status>"        // ready for sale or another status
+                "sortField": "price",       // one of enum values to sort
+                "sortOrder": "asc",         // order of sorting (asc or desc)
+            }
+             
++ Response 200 (application/json)
+
+        {
+            "products": [
+                {
+                    "id": "<productId>",
+                    "title": "<title>",
+                    "description": "<html>",
+                    "shipping": "<html>",
+                    "brand": {
+                        "id": "",
+                        "title": "",
+                        "pic" : {}
+                    },
+                    "category": {
+                        "id": 310,
+                        "name": "Дача"
+                    },
+                    "options": {
+                        "isHit": true,
+                        "isNew": false,
+                        "isSuggested": false
+                    },
+                    "status": {
+                        "key": "?",
+                        "title": "В наличии"
+                    },
+                    "availableForSale_count": 1,
+                    "isWished": false,
+                    "isInCart": false,
+                    "pics": [
+                        {
+                            "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                        }
+                    ],
+                    "destination": {
+                        "url": "?",
+                        "type": "product",
+                        "id": "?"
+                    },
+                    "price": {
+                        "currency": "RUB",
+                        "value": "499.0",
+                        "symbol": "₽"
+                    },
+                    "discounted": {
+                        "currency": "USD",
+                        "value": "18.0",
+                        "symbol": "$"
+                    },
+                    "discPercent": -5,
+                    "created_at": "2017-06-01T18:06:28.620Z",
+                    "updated_at": "2017-06-28T17:39:57.620Z",
+                    "attributes": [
+                        {
+                            "key": "<key>",
+                            "name": "<name>",
+                            "value": "<value>"
+                        }
+                    ],
+                    "delivery": {},
+                    "payment": {}
+                }
+            ]
+        }
+        
+
+# Group Cart
+
+## Cart [/cart]
+
+### Retrieve Cart [GET]
+
+Получение корзины пользователя.
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+
+        {
+            "items": [
+                {
+                    "id": "<itemId>",
+                    "product": { // product object 
+                        "id": "<productId>",
+                        "title": "<title>",
+                        "description": "<html>",
+                        "brand": {
+                            "id": "",
+                            "title": "",
+                            "pic" : {}
+                        },
+                        "category": {
+                            "id": 310,
+                            "name": "Дача"
+                        },
+                        "options": {
+                            "isHit": true,
+                            "isNew": false,
+                            "isSuggested": false
+                        },
+                        "status": {
+                            "key": "?",
+                            "title": "В наличии"
+                        },
+                        "availableForSale_count": 1,
+                        "isReserved": false,
+                        "isInCart": false,
+                        "pics": [
+                            {
+                                "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                            }
+                        ],
+                        "destination": {
+                            "url": "?",
+                            "type": "product",
+                            "id": "?"
+                        },
+                        "price": {
+                            "currency": "RUB",
+                            "value": "499.0",
+                            "symbol": "₽"
+                        },
+                        "discount": 0.2,
+                        "created_at": "2017-06-01T18:06:28.620Z",
+                        "updated_at": "2017-06-28T17:39:57.620Z",
+                        "attributes": [
+                            {
+                                "key": "<key>",
+                                "name": "<name>",
+                                "value": "<value>"
+                            }
+                        ],
+                        "delivery": {},
+                        "payment": {}
+                    },
+                    "count": 1,
+                    "isSelected": true,
+                    "pic": {
+                        "thumbnail": "<url>"
+                    },
+                }
+            ],
+            "totalItems": 1,
+            "reserved": [
+                {
+                    "id": "<itemId>",
+                    "product": { // product object 
+                        "id": "<productId>",
+                        "title": "<title>",
+                        "description": "<html>",
+                        "brand": {
+                            "id": "",
+                            "title": "",
+                            "pic" : {}
+                        },
+                        "category": {
+                            "id": 310,
+                            "name": "Дача"
+                        },
+                        "options": {
+                            "isHit": true,
+                            "isNew": false,
+                            "isSuggested": false
+                        },
+                        "status": {
+                            "key": "?",
+                            "title": "В наличии"
+                        },
+                        "availableForSale_count": 1,
+                        "isReserved": false,
+                        "isInCart": false,
+                        "pics": [
+                            {
+                                "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                            }
+                        ],
+                        "destination": {
+                            "url": "?",
+                            "type": "product",
+                            "id": "?"
+                        },
+                        "price": {
+                            "currency": "RUB",
+                            "value": "499.0",
+                            "symbol": "₽"
+                        },
+                        "discount": 0.2,
+                        "created_at": "2017-06-01T18:06:28.620Z",
+                        "updated_at": "2017-06-28T17:39:57.620Z",
+                        "attributes": [
+                            {
+                                "key": "<key>",
+                                "name": "<name>",
+                                "value": "<value>"
+                            }
+                        ],
+                        "delivery": {},
+                        "payment": {}
+                    },
+                    "count": 1,
+                    "isSelected": true,
+                    "pic": {
+                        "thumbnail": "<url>"
+                    }
+                }
+            ],
+            "totalReserved": 1,
+            "dateTime": "2017-06-28T17:39:57.620Z"
+        }
+
+## Retrieve cart items total quantity [/cart/count]
+
+### Get count [GET]
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+
+        {
+            "totalItems": 1,
+            "totalReserved": 0
+        }
+
+## Add Product to Cart [/cart/add]
+
+### Add to Cart [POST]
+
+Добавление товара в корзину или в "Отложенные" (если `isReserved` == `true`).
+Либо перенести из отложенных (все единицы товара) в корзину (если `isReserved` == `false`). 
+
++ Request (application/json)
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
+    + Body
+        
+            {   
+                "id": "<productId>",
+                "count": 1,
+                "isReserved": false
+            }
+             
++ Response 200 (application/json)
+
+        {
+            "count": 1
+        }
+
+## Set Count of units of product [/cart/set_count]
+
+### Set Count [POST]
+
+Задать количество единиц товара в корзине (>= 0).
+
++ Request (application/json)
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
+    + Body
+        
+            {   
+                "id": "<itemId>",
+                "count": 1
+            }
+    
++ Response 200 (application/json)
+
+        {
+            "count": 1
+        }
+        
+        
+## Set item selected [/cart/set_selected]
+
+### Set Selected
+
+Выставить или снять отметку, что продукт выбран.
+
++ Request (application/json)
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
+    + Body
+        
+            {   
+                "id": "<itemId>",
+                "isSelected": true
+            }
+    
++ Response 200 (application/json)
+
+        {
+            "isSelected": true
+        }
+
+## Remove item from Cart [/cart/remove/{id}] 
+
+### Delete item [DELETE]
+
+Удалить товар из корзины
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Parameters
+    + id (required, number, `1`) - Product ID
+    
++ Response 200 (application/json)
+
+        {
+            "count": 0
+        }
+        
+## Remove several items from Cart [/cart/remove]
+
+### Delete items [POST]
+
+Удалить несколько товаров из корзины (или "отложенных") по их id или все товары, если removeAll == true (по умолчанию removeAll == false).
+Для удаления из "отложенных" выставляется флаг fromReserved == true (по умолчанию false). 
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
+
+    + Body
+        
+            {   
+                "ids": ["<itemId1>", "<itemId2>", "<itemId3>"],
+                "removeAll": false,
+                "fromReserved": false
+            }
+    
++ Response 204
+
+
+
+
+
+
+
+        
+# Group Orders
+
+## Info for Checkout [/orders/checkout/info]
+
+### Get Info for Checkout [GET]
+
+Получение необходимой информации и справочников для оформления покупки.
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+
+        {
+        }
+
+## Checkout [/orders/checkout]
+
+### Checkout [POST]
+
+Оформление покупки из корзины. 
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
+    + Body
+        
+            {
+            }
+             
++ Response 200 (application/json)
+
+        {
+        }
+
+## Checkout Now [/orders/checkout/now]
+
+### Checkout Now [POST]
+
+Оформление покупки "в 1 клик"
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
+    + Body
+        
+            {
+            }
+             
++ Response 200 (application/json)
+
+        {
+        }
+
+## Orders [/orders]
+
+### List orders [POST]
+
+Получение списка / поиск по разным параметрам заказов.
+
+
+## Orders Count [/orders/count]
+
+### Retrieve orders count [GET]
+
+Получить количество заказов в разрезе статусов.
+
+
+## Order [/orders/{id}]
+
+### Get order [GET]
+
+Получение инфо о заказе по его id. 
+
+
+## Cancel Order [/orders/{id}/cancel]
+
+### Cancel order [POST]
+
+Отменить заказ.
+
+
+# Group Online Payment
+
+## Request for payment page url and info [/orders/{id}/pay]
+
++ Parameters
+
+    + id (required, number, `1`) - order ID
+
+### Get payment service info [GET]
+
+URL страницы платежного сервиса и инфо для оплаты заказа.
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 200 (application/json)
+
+        {
+            "location": "<payment_service_order_page_url>",
+            "succes_url": "<url path to detect successful payment>",
+            "failure_url": "<url path to detect failed payment>",
+            "cancel_url": "<url path to detect leaving service page>",
+            "info": {},
+            "<smth else?>": {}
+        }
+
+## Send payment success notification [/order/{id}/client_payment_success]
+
++ Parameters
+
+    + id (required, number, `1`) - order ID
+
+### Send confirmation signal [POST]
+
+Отправка подтверждения успешной оплаты клиентом. 
+(Нужно ли такое подтверждение бэкенду?)
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: ru-RU
+             
++ Response 204
