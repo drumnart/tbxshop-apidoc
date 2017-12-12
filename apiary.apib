@@ -55,7 +55,7 @@ Bitrix API allows consumers to interact with ToBox eShop
 Секция - это json объект, где ключ (например, "banners") определяет формат отображения ячеек на клиенте.
 Для секций "New Products" (newProducts) и "Best Sellers" (bestSellers) возвращать не более 5 entities.
 Для секции "Departments" (departments) возвращать 4 entities.
-Для секции "Product Reviews" (articles) - не более 3 entities. 
+Для секции "Product Reviews" (prodReviews) - не более 3 entities. 
 Для секции "Campaigns" (campaigns) - не более 3
 Для секции "Bundles" (bundles) - TODO: <Пока не известно> 
 Для остальных секций - все entities.
@@ -85,6 +85,7 @@ destination - объект, описывающий куда перейти пр�
 + Response 200 (application/json)
 
         {
+            "shortTitle": "<title>",
             "sections": [
                 {
                     "banners": {
@@ -169,15 +170,24 @@ destination - объект, описывающий куда перейти пр�
                                 "availableForSale_count": 16,
                                 "isWished": false,
                                 "isInCart": false,
-                                "pics": [
+                                "pics": ["<url>"], // Deprecated
+                                "imgs": [
                                     {
-                                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                                        "fullsize": "<fullsize image url>",
+                                        "preview": "<preview image url>",
+                                        "thummbnail": "<thumbnail image url>"
                                     }
                                 ],
                                 "destination": {
                                     "url": "https://tobox.com/eshop/products/<productId>",
                                     "type": "product",
-                                    "id": "<productId>"
+                                    "id": "<productId>",
+                                    "parents": [
+                                        {
+                                            "categoryId": "1243",
+                                            "categoryName": "<name>"
+                                        }
+                                    ]
                                 },
                                 "price": {
                                     "currency": "USD",
@@ -206,7 +216,7 @@ destination - объект, описывающий куда перейти пр�
                     }
                 }, 
                 {
-                    "articles": {    // aka Product Reviews
+                    "prodReviews": {
                         "header": {
                             "title": "Product Reviews",
                             "accessory": {},
@@ -228,9 +238,7 @@ destination - объект, описывающий куда перейти пр�
                                     }
                                 ],
                                 "pics": [
-                                    {
-                                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
-                                    }
+                                    "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
                                 ],
                                 "destination": {
                                     "url": "<url>",
@@ -290,15 +298,24 @@ destination - объект, описывающий куда перейти пр�
                                 "availableForSale_count": 1,
                                 "isWished": false,
                                 "isInCart": false,
-                                "pics": [
+                                "pics": ["<url>"], // Deprecated
+                                "imgs": [
                                     {
-                                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                                        "fullsize": "<fullsize image url>",
+                                        "preview": "<preview image url>",
+                                        "thummbnail": "<thumbnail image url>"
                                     }
                                 ],
                                 "destination": {
-                                    "url": "?",
+                                    "url": "<product id>",
                                     "type": "product",
-                                    "id": "?"
+                                    "id": "<id>",
+                                    "parents": [
+                                        {
+                                            "categoryId": "1243",
+                                            "categoryName": "<name>"
+                                        }
+                                    ]
                                 },
                                 "price": {
                                     "currency": "RUB",
@@ -439,9 +456,7 @@ destination - объект, описывающий куда перейти пр�
                         "entities": [
                             {
                                 "id": "<bannerId>",
-                                "pic": {
-                                    "large": ""
-                                },
+                                "pics": [],
                                 "destination": {
                                     "url": "",
                                     "type": "category or product or selection or smth. else"
@@ -480,15 +495,24 @@ destination - объект, описывающий куда перейти пр�
                                 "availableForSale_count": 1,
                                 "isWished": false,
                                 "isInCart": false,
-                                "pics": [
+                                "pics": ["<url>"], // Deprecated
+                                "imgs": [
                                     {
-                                        "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                                        "fullsize": "<fullsize image url>",
+                                        "preview": "<preview image url>",
+                                        "thummbnail": "<thumbnail image url>"
                                     }
                                 ],
                                 "destination": {
                                     "url": "?",
                                     "type": "product",
-                                    "id": "?"
+                                    "id": "?",
+                                    "parents": [
+                                        {
+                                            "categoryId": "1243",
+                                            "categoryName": "<name>"
+                                        }
+                                    ]
                                 },
                                 "price": {
                                     "currency": "RUB",
@@ -623,11 +647,25 @@ destination - объект, описывающий куда перейти пр�
                 "availableForSale_count": 1,
                 "isReserved": false,
                 "isInCart": false,
-                "pics": [
+                "pics": ["<url>"], // Deprecated
+                "imgs": [
                     {
-                        "large": "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
+                        "fullsize": "<fullsize image url>",
+                        "preview": "<preview image url>",
+                        "thummbnail": "<thumbnail image url>"
                     }
                 ],
+                "destination": {
+                    "url": "<product id>",
+                    "type": "product",
+                    "id": "<id>",
+                    "parents": [
+                        {
+                            "categoryId": "1243",
+                            "categoryName": "<name>"
+                        }
+                    ]
+                },
                 "price": {
                     "currency": "RUB",
                     "value": "499.0",
@@ -748,15 +786,24 @@ destination - объект, описывающий куда перейти пр�
                     "availableForSale_count": 1,
                     "isWished": false,
                     "isInCart": false,
-                    "pics": [
+                    "pics": ["<url>"], // Deprecated
+                    "imgs": [
                         {
-                            "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                            "fullsize": "<fullsize image url>",
+                            "preview": "<preview image url>",
+                            "thummbnail": "<thumbnail image url>"
                         }
                     ],
                     "destination": {
-                        "url": "?",
+                        "url": "<product id>",
                         "type": "product",
-                        "id": "?"
+                        "id": "<id>",
+                        "parents": [
+                            {
+                                "categoryId": "1243",
+                                "categoryName": "<name>"
+                            }
+                        ]
                     },
                     "price": {
                         "currency": "RUB",
@@ -829,24 +876,38 @@ destination - объект, описывающий куда перейти пр�
                             "title": "В наличии"
                         },
                         "availableForSale_count": 1,
-                        "isReserved": false,
+                        "isWished": false,
                         "isInCart": false,
-                        "pics": [
+                        "pics": ["<url>"], // Deprecated
+                        "imgs": [
                             {
-                                "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                                "fullsize": "<fullsize image url>",
+                                "preview": "<preview image url>",
+                                "thummbnail": "<thumbnail image url>"
                             }
                         ],
                         "destination": {
-                            "url": "?",
+                            "url": "<product id>",
                             "type": "product",
-                            "id": "?"
+                            "id": "<id>",
+                            "parents": [
+                                {
+                                    "categoryId": "1243",
+                                    "categoryName": "<name>"
+                                }
+                            ]
                         },
                         "price": {
                             "currency": "RUB",
                             "value": "499.0",
                             "symbol": "₽"
                         },
-                        "discount": 0.2,
+                        "discounted": {
+                               "currency": "USD",
+                               "value": "18.0",
+                               "symbol": "$"
+                         },
+                         "discPercent": -5,
                         "created_at": "2017-06-01T18:06:28.620Z",
                         "updated_at": "2017-06-28T17:39:57.620Z",
                         "attributes": [
@@ -860,10 +921,10 @@ destination - объект, описывающий куда перейти пр�
                         "payment": {}
                     },
                     "count": 1,
-                    "isSelected": true,
                     "pic": {
                         "thumbnail": "<url>"
                     },
+                    "isPromo": false
                 }
             ],
             "totalItems": 1,
@@ -893,24 +954,38 @@ destination - объект, описывающий куда перейти пр�
                             "title": "В наличии"
                         },
                         "availableForSale_count": 1,
-                        "isReserved": false,
+                        "isWished": false,
                         "isInCart": false,
-                        "pics": [
+                        "pics": ["<url>"], // Deprecated
+                        "imgs": [
                             {
-                                "large": "https://dev.tobox.ru/upload/iblock/fda/fda7c5083ecfa6e94e6ada32fd0ec2b3.jpg"
+                                "fullsize": "<fullsize image url>",
+                                "preview": "<preview image url>",
+                                "thummbnail": "<thumbnail image url>"
                             }
                         ],
                         "destination": {
-                            "url": "?",
+                            "url": "<product id>",
                             "type": "product",
-                            "id": "?"
+                            "id": "<id>",
+                            "parents": [
+                                {
+                                    "categoryId": "1243",
+                                    "categoryName": "<name>"
+                                }
+                            ]
                         },
                         "price": {
                             "currency": "RUB",
                             "value": "499.0",
                             "symbol": "₽"
                         },
-                        "discount": 0.2,
+                        "discounted": {
+                            "currency": "USD",
+                            "value": "18.0",
+                            "symbol": "$"
+                        },
+                        "discPercent": -5,
                         "created_at": "2017-06-01T18:06:28.620Z",
                         "updated_at": "2017-06-28T17:39:57.620Z",
                         "attributes": [
@@ -924,10 +999,10 @@ destination - объект, описывающий куда перейти пр�
                         "payment": {}
                     },
                     "count": 1,
-                    "isSelected": true,
                     "pic": {
                         "thumbnail": "<url>"
-                    }
+                    },
+                    "isPromo": false
                 }
             ],
             "totalReserved": 1,
@@ -1005,33 +1080,6 @@ destination - объект, описывающий куда перейти пр�
         {
             "count": 1
         }
-        
-        
-## Set item selected [/cart/set_selected]
-
-### Set Selected
-
-Выставить или снять отметку, что продукт выбран.
-
-+ Request (application/json)
-   
-    + Headers
-       
-             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
-             Accept-Language: ru-RU
-             
-    + Body
-        
-            {   
-                "id": "<itemId>",
-                "isSelected": true
-            }
-    
-+ Response 200 (application/json)
-
-        {
-            "isSelected": true
-        }
 
 ## Remove item from Cart [/cart/remove/{id}] 
 
@@ -1057,7 +1105,9 @@ destination - объект, описывающий куда перейти пр�
         
 ## Remove several items from Cart [/cart/remove]
 
-### Delete items [POST]
+### Delete items [POST]  
+
+// Not implemented
 
 Удалить несколько товаров из корзины (или "отложенных") по их id или все товары, если removeAll == true (по умолчанию removeAll == false).
 Для удаления из "отложенных" выставляется флаг fromReserved == true (по умолчанию false). 
@@ -1079,11 +1129,6 @@ destination - объект, описывающий куда перейти пр�
             }
     
 + Response 204
-
-
-
-
-
 
 
         
@@ -1159,13 +1204,21 @@ destination - объект, описывающий куда перейти пр�
 
 Получение списка / поиск по разным параметрам заказов.
 
++ Response 200 (application/json)
 
+        {
+        }
+        
 ## Orders Count [/orders/count]
 
 ### Retrieve orders count [GET]
 
 Получить количество заказов в разрезе статусов.
 
++ Response 200 (application/json)
+
+        {
+        }
 
 ## Order [/orders/{id}]
 
@@ -1173,6 +1226,10 @@ destination - объект, описывающий куда перейти пр�
 
 Получение инфо о заказе по его id. 
 
++ Response 200 (application/json)
+
+        {
+        }
 
 ## Cancel Order [/orders/{id}/cancel]
 
@@ -1180,10 +1237,14 @@ destination - объект, описывающий куда перейти пр�
 
 Отменить заказ.
 
++ Response 200 (application/json)
 
+        {
+        }
+        
 # Group Online Payment
 
-## Request for payment page url and info [/orders/{id}/pay]
+## Request for payment form and info [/orders/pay/{id}]
 
 + Parameters
 
@@ -1191,7 +1252,7 @@ destination - объект, описывающий куда перейти пр�
 
 ### Get payment service info [GET]
 
-URL страницы платежного сервиса и инфо для оплаты заказа.
+Форма платежного сервиса и инфо для оплаты заказа.
 
 + Request
    
@@ -1203,30 +1264,43 @@ URL страницы платежного сервиса и инфо для оп
 + Response 200 (application/json)
 
         {
-            "location": "<payment_service_order_page_url>",
-            "succes_url": "<url path to detect successful payment>",
-            "failure_url": "<url path to detect failed payment>",
-            "cancel_url": "<url path to detect leaving service page>",
-            "info": {},
-            "<smth else?>": {}
+            "action": "",
+            "method": "",
+            "successReturn": "",
+            "cancelReturn": "",
+            "cmd": "",
+            "buttonSource": "",
+            "business": "",
+            "itemName": "",
+            "currencyCode": "",
+            "amount": "",
+            "custom": "",
+            "notifyUrl": "",
+            "noShipping": "",
+            "addressOverride": "",
+            "submit": "",
+            "content": ""
         }
-
-## Send payment success notification [/order/{id}/client_payment_success]
+        
+## Check is payment success [/orders/client_payment_success/{id}]
 
 + Parameters
 
     + id (required, number, `1`) - order ID
+    
+### Get info is payment was successful [GET]
 
-### Send confirmation signal [POST]
-
-Отправка подтверждения успешной оплаты клиентом. 
-(Нужно ли такое подтверждение бэкенду?)
+Проверка успешности оплаты по id заказа. 
 
 + Request
    
     + Headers
        
              x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
-             Accept-Language: ru-RU
-             
-+ Response 204
+             Accept-Language: en-US
+
++ Response 200 (application/json)
+
+        {
+            "payed": true
+        }
