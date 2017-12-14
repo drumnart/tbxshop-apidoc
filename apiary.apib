@@ -29,8 +29,6 @@ Bitrix API allows consumers to interact with ToBox eShop
 
 + Response 200 (application/json)
 
-    + Body
-
             {
                 "key": "AtErTsGVDZXJ68hQXVZ9"
             }
@@ -44,6 +42,52 @@ Bitrix API allows consumers to interact with ToBox eShop
                 "message": "User isn’t found"
             }
 
+
+# Group Info
+
+## Delivery Info [/info/delivery]
+
+### Get Delivery Info [GET]
+
+Получить общую информацию о доставке (в формате html)
+
++ Request
+   
+    + Headers
+       
+            x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+            Accept-Language: en-US
+             
++ Response 200 (application/json)
+    
+        {
+            "descr": "<ul><li>This item ships directly from US</li></ul>"
+        }
+
+## States [/info/states]
+
+### Get States Collection [GET]
+
+Получить словарь штатов, где ключ - код штата, значение - наименование штата
+
++ Request
+   
+    + Headers
+       
+            x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+            Accept-Language: en-US
+             
++ Response 200 (application/json)
+    
+        {
+            "states": {
+                "AL": "Alabama",
+                "AK": "Alaska",
+                "AZ": "Arizona",
+                "AR": "Arkansas",
+                "CA": "California"
+            }
+        }
 
 # Group Feeds
 
@@ -115,7 +159,7 @@ destination - объект, описывающий куда перейти пр�
                         },
                         "entities": [
                             {
-                                "id": "d310988a-0021-4c6e-85b7-000000000000",
+                                "id": "13364",
                                 "pics": [
                                     "https://st-img-02.tobox.com/st/9/a/1/5/9a15bd2b-e893-4444-9632-0aceb1fddc26.jpg"
                                 ],
@@ -227,7 +271,7 @@ destination - объект, описывающий куда перейти пр�
                             {
                                 "id": "<prodReviewId>",
                                 "title": "Как выбрать блендер?",
-                                "short_description": "Для хозяек на кухне, очень важна каждая деталь, а такой прибор как блендер всегда верный помощник при готовке.",
+                                "short_descr": "Для хозяек на кухне, очень важна каждая деталь, а такой прибор как блендер всегда верный помощник при готовке.",
                                 "review_parts": [
                                     {
                                         "subtitle": "1. Тип",
@@ -247,7 +291,7 @@ destination - объект, описывающий куда перейти пр�
                                 },
                                 "avatar": {
                                     "pic": {
-                                        "thumbnail": "https://urbanculture.in/images/9/9b/Slowpoke.png"
+                                        "thumbnail": "url"
                                     },
                                     "destination": {}
                                 },
@@ -277,11 +321,10 @@ destination - объект, описывающий куда перейти пр�
                                 "title": "Плитка электрическая одноконфорочная",
                                 "shortTitle": "Short String",
                                 "description": "<В html формате>",
-                                "shipping": "<html>",
                                 "brand": {
                                     "id": "",
                                     "title": "",
-                                    "pic" : {}
+                                    "pics" : []
                                 },
                                 "category": {
                                     "id": 315,
@@ -307,6 +350,7 @@ destination - объект, описывающий куда перейти пр�
                                         "thummbnail": "<thumbnail image url>"
                                     }
                                 ],
+                                "rating": "4.3",
                                 "destination": {
                                     "url": "<product id>",
                                     "type": "product",
@@ -337,9 +381,7 @@ destination - объект, описывающий куда перейти пр�
                                         "name": "<name>",
                                         "value": "<value>"
                                     }
-                                ],
-                                "delivery": {},
-                                "payment": {}
+                                ]
                             }
                         ]
                     }
@@ -362,10 +404,11 @@ destination - объект, описывающий куда перейти пр�
                         "entities": [
                             {
                                 "id": "1240",
+                                "title": "Digital Scales",
+                                "descr": "Digital Scales",
                                 "pics": [
                                     "https://bitrix.tobox.com/upload/iblock/e1f/e1f37485c03ea8b81dcc51c2304b5c4e.jpg"
                                 ],
-                                "title": "Digital Scales",
                                 "sort": 0,
                                 "destination": {
                                     "url": "<url>",
@@ -379,7 +422,9 @@ destination - объект, описывающий куда перейти пр�
                 {
                     "campaigns": {
                         "header": {
-                            "title": "Campaigns"
+                            "title": "Campaigns",
+                            "accessory": {},
+                            "destination": {}
                         },
                         "footer": {},
                         "entities": [
@@ -390,7 +435,6 @@ destination - объект, описывающий куда перейти пр�
                                 ],
                                 "title": "title",
                                 "products": [],
-                                "sort": 0,
                                 "destination": {
                                     "url": "<url>",
                                     "type": "compaign",
@@ -411,7 +455,6 @@ destination - объект, описывающий куда перейти пр�
                                 "id": "<id>",
                                 "pics": [],
                                 "title": "title",
-                                "sort": 0,
                                 "products": [],
                                 "destination": {
                                     "url": "<url>",
@@ -477,7 +520,6 @@ destination - объект, описывающий куда перейти пр�
                                 "title": "<title>",
                                 "shortTitle": "Short String",
                                 "description": "<html>",
-                                "shipping": "<html>",
                                 "brand": {
                                     "id": "",
                                     "title": "",
@@ -507,6 +549,7 @@ destination - объект, описывающий куда перейти пр�
                                         "thummbnail": "<thumbnail image url>"
                                     }
                                 ],
+                                "rating": "4.3",
                                 "destination": {
                                     "url": "?",
                                     "type": "product",
@@ -628,7 +671,6 @@ destination - объект, описывающий куда перейти пр�
                 "title": "<title>",
                 "shortTitle": "Short String",
                 "description": "<html>",
-                "shipping": "<html>",
                 "brand": {
                     "id": "",
                     "title": "",
@@ -648,7 +690,8 @@ destination - объект, описывающий куда перейти пр�
                     "title": "В наличии"
                 },
                 "availableForSale_count": 1,
-                "isReserved": false,
+                "isReserved": false, // Deprecated
+                "isWished": false,
                 "isInCart": false,
                 "pics": ["<url>"], // Deprecated
                 "imgs": [
@@ -689,8 +732,7 @@ destination - объект, описывающий куда перейти пр�
                         "value": "<value>"
                     }
                 ],
-                "delivery": {},
-                "payment": {},
+                "rating": 4.5,
                 "userReviews": { // В части отзывов пока используем только рейтинги
                     "total": 3,
                     "rating": 4.5,
@@ -768,11 +810,10 @@ destination - объект, описывающий куда перейти пр�
                     "title": "<title>",
                     "shortTitle": "Short String",
                     "description": "<html>",
-                    "shipping": "<html>",
                     "brand": {
                         "id": "",
                         "title": "",
-                        "pic" : {}
+                        "pics" : []
                     },
                     "category": {
                         "id": 310,
@@ -798,6 +839,7 @@ destination - объект, описывающий куда перейти пр�
                             "thummbnail": "<thumbnail image url>"
                         }
                     ],
+                    "rating": "4.3",
                     "destination": {
                         "url": "<product id>",
                         "type": "product",
@@ -828,13 +870,77 @@ destination - объект, описывающий куда перейти пр�
                             "name": "<name>",
                             "value": "<value>"
                         }
-                    ],
-                    "delivery": {},
-                    "payment": {}
+                    ]
                 }
             ]
         }
         
+# Group Wishlist
+
+## Wishlist [/wishlist]
+
+### Retrieve Wishlist [GET]
+
+Полуение списка желаемых товаров
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: en-US
+             
++ Response 200 (application/json)
+
+        [
+            {
+                // Product entity
+            }
+        ]
+
+## Add Product to Wishlist [/wishlist/add]
+
+### Add to Wishlist [POST]
+
+Добавление товара в список желаемого. 
+
++ Request (application/json)
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: en-US
+             
+    + Body
+        
+            {   
+                "id": "<productId>"
+            }
+             
++ Response 200 (application/json)
+
+        {
+            "id": 362 // id of created wishlist item
+        }
+
+## Remove item from Wishlist [/wishlist/remove/{id}] 
+
+### Remove item [DELETE]
+
+Удалить товар из списка желаемого
+
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: en-US
+             
++ Parameters
+    + id (required, number, `1`) - Product ID
+    
++ Response 200 (application/json)
+
 
 # Group Cart
 
@@ -865,7 +971,7 @@ destination - объект, описывающий куда перейти пр�
                         "brand": {
                             "id": "",
                             "title": "",
-                            "pic" : {}
+                            "pics" : []
                         },
                         "category": {
                             "id": 310,
@@ -891,6 +997,7 @@ destination - объект, описывающий куда перейти пр�
                                 "thummbnail": "<thumbnail image url>"
                             }
                         ],
+                        "rating": "4.3",
                         "destination": {
                             "url": "<product id>",
                             "type": "product",
@@ -921,15 +1028,12 @@ destination - объект, описывающий куда перейти пр�
                                 "name": "<name>",
                                 "value": "<value>"
                             }
-                        ],
-                        "delivery": {},
-                        "payment": {}
+                        ]
                     },
                     "count": 1,
                     "pic": {
                         "thumbnail": "<url>"
                     },
-                    "isPromo": false,
                     "discounted": {
                         "currency": "USD",
                         "value": "5.85",
@@ -938,86 +1042,11 @@ destination - объект, описывающий куда перейти пр�
                 }
             ],
             "totalItems": 1,
-            "reserved": [
-                {
-                    "id": "<itemId>",
-                    "product": { // product object 
-                        "id": "<productId>",
-                        "title": "<title>",
-                        "shortTitle": "Short String",
-                        "description": "<html>",
-                        "brand": {
-                            "id": "",
-                            "title": "",
-                            "pic" : {}
-                        },
-                        "category": {
-                            "id": 310,
-                            "name": "Дача"
-                        },
-                        "options": {
-                            "isHit": true,
-                            "isNew": false,
-                            "isSuggested": false
-                        },
-                        "status": {
-                            "key": "?",
-                            "title": "В наличии"
-                        },
-                        "availableForSale_count": 1,
-                        "isWished": false,
-                        "isInCart": false,
-                        "pics": ["<url>"], // Deprecated
-                        "imgs": [
-                            {
-                                "fullsize": "<fullsize image url>",
-                                "preview": "<preview image url>",
-                                "thummbnail": "<thumbnail image url>"
-                            }
-                        ],
-                        "destination": {
-                            "url": "<product id>",
-                            "type": "product",
-                            "id": "<id>",
-                            "parents": [
-                                {
-                                    "categoryId": "1243",
-                                    "categoryName": "<name>"
-                                }
-                            ]
-                        },
-                        "price": {
-                            "currency": "RUB",
-                            "value": "499.0",
-                            "symbol": "₽"
-                        },
-                        "discounted": {
-                            "currency": "USD",
-                            "value": "18.0",
-                            "symbol": "$"
-                        },
-                        "discPercent": -5,
-                        "created_at": "2017-06-01T18:06:28.620Z",
-                        "updated_at": "2017-06-28T17:39:57.620Z",
-                        "attributes": [
-                            {
-                                "key": "<key>",
-                                "name": "<name>",
-                                "value": "<value>"
-                            }
-                        ],
-                        "delivery": {},
-                        "payment": {}
-                    },
-                    "count": 1,
-                    "pic": {
-                        "thumbnail": "<url>"
-                    },
-                    "isPromo": false
-                }
-            ],
-            "totalReserved": 1,
-            "dateTime": "2017-06-28T17:39:57.620Z"
+            "totalPrice": {
+                "currency": "USD",
+                "value": "11.69",
+                "symbol": "$"
+            }
         }
 
 ## Retrieve cart items total quantity [/cart/count]
@@ -1042,8 +1071,7 @@ destination - объект, описывающий куда перейти пр�
 
 ### Add to Cart [POST]
 
-Добавление товара в корзину или в "Отложенные" (если `isReserved` == `true`).
-Либо перенести из отложенных (все единицы товара) в корзину (если `isReserved` == `false`). 
+Добавление товара в корзину.
 
 + Request (application/json)
    
@@ -1118,7 +1146,7 @@ destination - объект, описывающий куда перейти пр�
 
 ### Delete items [POST]  
 
-// Not implemented
+// Not implemented yet
 
 Удалить несколько товаров из корзины (или "отложенных") по их id или все товары, если removeAll == true (по умолчанию removeAll == false).
 Для удаления из "отложенных" выставляется флаг fromReserved == true (по умолчанию false). 
@@ -1168,26 +1196,59 @@ destination - объект, описывающий куда перейти пр�
         
 # Group Orders
 
-## Info for Checkout [/orders/checkout/info]
-
-### Get Info for Checkout [GET]
-
-Получение необходимой информации и справочников для оформления покупки.
+## Info for Checkout [/orders/checkout/calc/]
+    
+### Retrieve Info for Checkout [POST]
+    
+Получение способов и стоимостей доставки, налогов и др. необходимой информации для оформления покупки.
 
 + Request
    
     + Headers
        
              x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
-             Accept-Language: ru-RU
+             Accept-Language: en-US
+             
+    + Body
+    
+            {
+                "id": "LA" // State code
+            }
              
 + Response 200 (application/json)
 
         {
+            "17": {
+                "id": "17",
+                "name": "Standart shipping",
+                "date": "3-5 business days",
+                "price": 6.49,
+                "sale_tax": 2.7,
+                "currency": "USD",
+                "symbol": "$"
+            },
+            "20": {
+                "id": "20",
+                "name": "Expedited shipping",
+                "date": "2 days",
+                "price": 9.13,
+                "sale_tax": 2.7,
+                "currency": "USD",
+                "symbol": "$"
+            },
+            "21": {
+                "id": "21",
+                "name": "Priority shipping",
+                "date": "next day",
+                "price": 15.18,
+                "sale_tax": 2.7,
+                "currency": "USD",
+                "symbol": "$"
+            }
         }
 
 ## Checkout [/orders/checkout]
-
+    
 ### Checkout [POST]
 
 Оформление покупки из корзины. 
@@ -1200,18 +1261,32 @@ destination - объект, описывающий куда перейти пр�
              Accept-Language: ru-RU
              
     + Body
-        
+    
             {
+                "userFName": "First",
+                "userLName": "Lastov",
+                "userEmail": "test@test.com",
+                "userPhone": 79012345678`, // Optional
+                "district": "LA",
+                "city": "Santa Barbara"),
+                "address": "123 Golden",
+                "addrEtc": "office 3", // Optional
+                "zip": "12345"
+                "shipment_id": "17",
+                "comment": "Comment"
             }
              
 + Response 200 (application/json)
 
         {
+            "id": 12 // Order number
         }
 
 ## Checkout Now [/orders/checkout/now]
 
 ### Checkout Now [POST]
+
+// Not implemented yet
 
 Оформление покупки "в 1 клик"
 
@@ -1236,6 +1311,8 @@ destination - объект, описывающий куда перейти пр�
 
 ### List orders [POST]
 
+// Not implemented yet
+
 Получение списка / поиск по разным параметрам заказов.
 
 + Response 200 (application/json)
@@ -1246,6 +1323,8 @@ destination - объект, описывающий куда перейти пр�
 ## Orders Count [/orders/count]
 
 ### Retrieve orders count [GET]
+
+// Not implemented yet
 
 Получить количество заказов в разрезе статусов.
 
@@ -1258,6 +1337,8 @@ destination - объект, описывающий куда перейти пр�
 
 ### Get order [GET]
 
+// Not implemented yet
+
 Получение инфо о заказе по его id. 
 
 + Response 200 (application/json)
@@ -1268,6 +1349,8 @@ destination - объект, описывающий куда перейти пр�
 ## Cancel Order [/orders/{id}/cancel]
 
 ### Cancel order [POST]
+
+// Not implemented yet
 
 Отменить заказ.
 
@@ -1281,7 +1364,6 @@ destination - объект, описывающий куда перейти пр�
 ## Request for payment form and info [/orders/pay/{id}]
 
 + Parameters
-
     + id (required, number, `1`) - order ID
 
 ### Get payment service info [GET]
@@ -1293,7 +1375,7 @@ destination - объект, описывающий куда перейти пр�
     + Headers
        
              x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
-             Accept-Language: ru-RU
+             Accept-Language: en-US
              
 + Response 200 (application/json)
 
