@@ -690,7 +690,6 @@ destination - объект, описывающий куда перейти пр�
                     "title": "В наличии"
                 },
                 "availableForSale_count": 1,
-                "isReserved": false, // Deprecated
                 "isInWishlist": false,
                 "isInCart": false,
                 "pics": ["<url>"], // Deprecated
@@ -1063,8 +1062,7 @@ destination - объект, описывающий куда перейти пр�
 + Response 200 (application/json)
 
         {
-            "totalItems": 1,
-            "totalReserved": 0
+            "totalItems": 1
         }
 
 ## Add Product to Cart [/cart/add]
@@ -1084,8 +1082,7 @@ destination - объект, описывающий куда перейти пр�
         
             {   
                 "id": "<productId>",
-                "count": 1,
-                "isReserved": false
+                "count": 1
             }
              
 + Response 200 (application/json)
@@ -1148,8 +1145,7 @@ destination - объект, описывающий куда перейти пр�
 
 // Not implemented yet
 
-Удалить несколько товаров из корзины (или "отложенных") по их id или все товары, если removeAll == true (по умолчанию removeAll == false).
-Для удаления из "отложенных" выставляется флаг fromReserved == true (по умолчанию false). 
+Удалить несколько товаров из корзины по их id или все товары, если removeAll == true (по умолчанию removeAll == false).
 
 + Request
    
@@ -1163,8 +1159,7 @@ destination - объект, описывающий куда перейти пр�
         
             {   
                 "ids": ["<itemId1>", "<itemId2>", "<itemId3>"],
-                "removeAll": false,
-                "fromReserved": false
+                "removeAll": false
             }
     
 + Response 204
