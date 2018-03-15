@@ -102,6 +102,9 @@ Bitrix API allows consumers to interact with ToBox eShop
 Возвращает главную ленту. Лента разделена на секции. Каждая секция состоит из header'а, footer'а и коллекции ячеек (entities).
 Секция - это json объект, где ключ (например, "banners") определяет формат отображения ячеек на клиенте.
 Для секций "New Products" (newProducts) и "Best Sellers" (bestSellers) возвращать не более 5 entities.
+Для секции "Main" - 10 entities.
+Для секции "Factories" - 10 entities.
+Для секции "Blog" (articles) - 5 entities.
 Для секции "Departments" (departments) возвращать 5 entities.
 Для секции "Product Reviews" (prodReviews) - не более 3 entities. 
 Для секции "Campaigns" (campaigns) - не более 3
