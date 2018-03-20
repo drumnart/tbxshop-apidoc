@@ -93,25 +93,18 @@ Bitrix API allows consumers to interact with ToBox eShop
 
 ## Main Feed [/feeds/main]
 
-+ Parameters
-    + limit (optional, number, `20`) - Max quantity of records per page
-    + page (optional, number, `0`) - Number of page
-
 ### Retrieve Main Feed [GET]
 
 Возвращает главную ленту. Лента разделена на секции. Каждая секция состоит из header'а, footer'а и коллекции ячеек (entities).
 Секция - это json объект, где ключ (например, "banners") определяет формат отображения ячеек на клиенте.
 Для секций "New Products" (newProducts) и "Best Sellers" (bestSellers) возвращать не более 5 entities.
-Для секции "Main" - 10 entities.
-Для секции "Factories" - 10 entities.
-Для секции "Blog" (articles) - 5 entities.
 Для секции "Departments" (departments) возвращать 5 entities.
 Для секции "Product Reviews" (prodReviews) - не более 3 entities. 
 Для секции "Campaigns" (campaigns) - не более 3
 Для секции "Bundles" (bundles) - TODO: <Пока не известно> 
 Для остальных секций - все entities.
 
-Должен поддерживаться paging.
+Переходы из хедеров в приложении пока не используются, пока досточно значения в title возвращать.
 
 В качестве основного entity в списках newProducts, bestSellers используется объект типа Product (по составу полей такой же как мы получаем через `/products/id` )
 Такой же объект используется и в корзине.
@@ -179,149 +172,6 @@ destination - объект, описывающий куда перейти пр�
                         ]
                     }
                 }, 
-                {
-                    "About": {
-                        "header": {
-                            "title": "About tobox",
-                            "accessory": {
-                                "enabled": true,
-                                "text": ""
-                            },
-                            "destination": {
-                                "url": "url path of About",
-                                "type": "?",
-                                "id": "?"
-                            }
-                        }
-                    }
-                },
-                {
-                    "main": {
-                        "header": {
-                            "title": "Kitchen",
-                            "accessory": {
-                                "enabled": false,
-                                "text": "See all"
-                            },
-                            "destination": {
-                                "url": "feed with products for kitchen",
-                                "type": "department (aka category)",
-                                "id": "categoryId"
-                            }
-                        },
-                        "footer": {},
-                        "entities": [
-                            // Product entities
-                        ]
-                    }
-                },
-                {
-                    "factories": {
-                        "header": {
-                            "title": "Factories",
-                            "accessory": {
-                                "enabled": false,
-                                "text": "See all"
-                            },
-                            "destination": {
-                                "url": "feed with factories",
-                                "type": "factory",
-                                "id": ""
-                            }
-                        },
-                        "footer": {},
-                        "entities": [ // entities of type Factory
-                            {
-                                "id": "<factoryId>",
-                                "title": "The Leather accessories factory",
-                                "description": "<html>",
-                                "city": "Los Angeles",
-                                "imgs": [
-                                    {
-                                        "fullsize": "<fullsize image url>",
-                                        "preview": "<preview image url>",
-                                        "thummbnail": "<thumbnail image url>"
-                                    }
-                                ],
-                                "destination": {
-                                    "url": "https://tobox.com/eshop/factories/<factoryId>",
-                                    "type": "factory",
-                                    "id": "<factoryId>",
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "blog": {
-                        "header": {
-                            "title": "Blog",
-                            "accessory": {
-                                "enabled": false,
-                                "text": "See all"
-                            },
-                            "destination": {
-                                "url": "feed with articels",
-                                "type": "factory",
-                                "id": ""
-                            }
-                        },
-                        "footer": {},
-                        "entities": [ // entities of type Article
-                            {
-                                "id": "<articleId>",
-                                "heading": "Recipe",
-                                "title": "Smokin' Hot Jerk Chicken Recipe",
-                                "previewImg": {
-                                    "fullsize": "<fullsize image url>",
-                                    "preview": "<preview image url>",
-                                    "thummbnail": "<thumbnail image url>"
-                                },
-                                "article_parts": [ // Part of article. Order is important.
-                                    {
-                                        "subtitle": "Подзаголовок",
-                                        "text": "Описание", // возможно в формате html
-                                        "pic": {
-                                            "preview": "<url of image>"
-                                        }
-                                    }
-                                ],
-                                "imgs": [
-                                    {
-                                        "fullsize": "<fullsize image url>",
-                                        "preview": "<preview image url>",
-                                        "thummbnail": "<thumbnail image url>"
-                                    }
-                                ],
-                                "destination": {
-                                    "url": "https://tobox.com/eshop/factories/<articleId>",
-                                    "type": "article",
-                                    "id": "<articleId>",
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "suggestions": {
-                        "header": {
-                            "title": "You may also like",
-                            "accessory": {
-                                "enabled": false,
-                                "text": "See all"
-                            },
-                            "destination": {
-                                "url": "feed with articels",
-                                "type": "factory",
-                                "id": ""
-                            }
-                        },
-                        "footer": {},
-                        "entities": [ // Pagination dependenent entities of type Product
-                            // Product entities
-                        ]
-                    }
-                },
                 {
                     "newProducts": {
                         "header": {
@@ -1455,10 +1305,29 @@ destination - объект, описывающий куда перейти пр�
 
 Получение списка / поиск по разным параметрам заказов.
 
++ Request
+   
+    + Headers
+       
+             x-eshop-token: AtErTsGVDZXJ68hQXVZ9a
+             Accept-Language: en-US
+             
+    + Body
+    
+            {
+                "statuses": [0, 1, ...],    // Массив кодов статусов для фильтрации заказов
+                "limit": 20,                // Количество записей на страницу
+                "page": 0,                  // Номер страницы
+                "searchQuery": "платье",    // Строка для поиска
+                "sortBy": "Created",        // Название поля, по которому сортировать (по дате создания, по дате изменения, по статусу и т.д.) 
+                "sortOrder": "Asc"          // Направление сортировки (Asc, Desc)
+            }
+            
 + Response 200 (application/json)
 
-        {
-        }
+        [
+            // Order type entities
+        ]
         
 ## Orders Count [/orders/count]
 
